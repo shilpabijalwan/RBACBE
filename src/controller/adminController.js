@@ -1,6 +1,9 @@
 const user = require("../models/userModel");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const {
+  loginUserService,
+  LogoutUserService,
+} = require("../services/userServices");
 const createUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -59,48 +62,17 @@ const getUsers = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
   try {
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
-    }
-    const isuserExists = await user.findOne({ where: { email } });
-
-    if (!isuserExists) {
-      return res.status(400).json({ message: "User not found" });
-    }
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      isuserExists.password,
-    );
-    if (!isPasswordCorrect) {
-      return res.status(400).json({ message: "Invalid password" });
-    }
-
-    const token = jwt.sign(
-      { userId: isuserExists.uuid },
-      process.env.JWT_SECRET,
-      { expiresIn: "120h" },
-    );
-
-    const isProduction = process.env.NODE_ENV === "production";
-
-    res.cookie("access_token", token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
-      maxAge: 120 * 60 * 60 * 1000,
-    });
-
-    res.status(200).json({ message: "Login successful" });
-
-
+    const response = await loginUserService(req, res);
+    res.status(200).json(response);
   } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
+    console.log(error, "loginUser error");
   }
 };
 
-module.exports = { createUser, getUsers, loginUser };
+const logoutUser = async (req, res) => {
+  const response = await LogoutUserService(req, res);
+  res.status(200).json(response);
+};
+
+module.exports = { createUser, getUsers, loginUser, logoutUser };
