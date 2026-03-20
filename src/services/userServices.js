@@ -7,11 +7,11 @@ const loginUserService = async (req, res) => {
   const { email, password } = req.body;
   const userExists = await user.findOne({ where: { email } });
   if (!userExists) {
-    throw new Error("User not found");
+    return res.status(401).json({ message: "User not found" });
   }
   const isPasswordCorrect = await bcrypt.compare(password, userExists.password);
   if (!isPasswordCorrect) {
-    throw new Error("Invalid password");
+    return res.status(401).json({ message: "Invalid password" });
   }
   const token = jwt.sign({ userId: userExists.uuid }, process.env.JWT_SECRET, {
     expiresIn: "120h",
@@ -32,12 +32,11 @@ const loginUserService = async (req, res) => {
   };
 };
 const LogoutUserService = async (req, res) => {
-const token = req.cookies?.access_token;
-    res.clearCookie("access_token");
-    return {
-        message: "Logout successful",
-    };
-     
+  const token = req.cookies?.access_token;
+  res.clearCookie("access_token");
+  return {
+    message: "Logout successful",
+  };
 };
 
-module.exports = { loginUserService , LogoutUserService};
+module.exports = { loginUserService, LogoutUserService };
