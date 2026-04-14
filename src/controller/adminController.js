@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const {
   loginUserService,
   LogoutUserService,
+  createUserRoleService,
+  createPermissionService,
 } = require("../services/userServices");
 const createUser = async (req, res) => {
   try {
@@ -51,7 +53,7 @@ const createUser = async (req, res) => {
 const getUsers = async (req, res) => {
   try {
     const users = await user.findAll({
-      attributes: [["uuid", "id"], "name", "email", ["role", "roles"]],
+      attributes: ["id", "uuid", "name", "email", "created_at", "updated_at"],
     });
     res.status(200).json({ message: "Users fetched successfully", users });
   } catch (error) {
@@ -64,15 +66,52 @@ const getUsers = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const response = await loginUserService(req, res);
-    res.status(200).json(response);
+    return res.status(response.status || 200).json(response);
   } catch (error) {
-    console.log(error, "loginUser error");
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 
 const logoutUser = async (req, res) => {
-  const response = await LogoutUserService(req, res);
-  res.status(200).json(response);
+  try {
+    const response = await LogoutUserService(req, res);
+    return res.status(response.status || 200).json(response);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
-module.exports = { createUser, getUsers, loginUser, logoutUser };
+const createUserRole = async (req, res) => {
+  try {
+    const result = await createUserRoleService(req, res);
+    return res.status(result.status || 201).json(result);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+};
+
+const createPermission = async (req, res) => {
+  try {
+    const result = await createPermissionService(req, res);
+    return res.status(result.status || 201).json(result);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+};
+
+module.exports = {
+  createUser,
+  getUsers,
+  loginUser,
+  logoutUser,
+  createUserRole,
+  createPermission,
+};

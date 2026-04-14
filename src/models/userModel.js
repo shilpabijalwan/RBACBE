@@ -4,11 +4,18 @@ const { sequelize } = require("../config/db");
 const user = sequelize.define(
   "user",
   {
-    uuid: {
+    id: {
       type: DataTypes.INTEGER,
+      autoIncrement: true,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
+      unique: true,
+    },
+    uuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      unique: true,
     },
     name: {
       type: DataTypes.STRING(100),
@@ -22,23 +29,6 @@ const user = sequelize.define(
     password: {
       type: DataTypes.STRING(100),
       allowNull: false,
-    },
-    role: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-      defaultValue: ["user"],
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-      field: "created_at",
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-      field: "updated_at",
     },
   },
   {

@@ -23,7 +23,6 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/admin", adminRouter);
-app.use("/api/permission", permissionRouter);
 
 app.use((req, res) => {
   res.status(404).json({
