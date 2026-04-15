@@ -3,8 +3,6 @@ const bcrypt = require("bcrypt");
 const {
   loginUserService,
   LogoutUserService,
-  createUserRoleService,
-  createPermissionService,
 } = require("../services/userServices");
 const createUser = async (req, res) => {
   try {
@@ -40,8 +38,8 @@ const createUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: roles,
     });
+
     res.status(201).json({ message: "User created successfully", userData });
   } catch (error) {
     res
@@ -85,33 +83,9 @@ const logoutUser = async (req, res) => {
   }
 };
 
-const createUserRole = async (req, res) => {
-  try {
-    const result = await createUserRoleService(req, res);
-    return res.status(result.status || 201).json(result);
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
-  }
-};
-
-const createPermission = async (req, res) => {
-  try {
-    const result = await createPermissionService(req, res);
-    return res.status(result.status || 201).json(result);
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
-  }
-};
-
 module.exports = {
   createUser,
   getUsers,
   loginUser,
   logoutUser,
-  createUserRole,
-  createPermission,
 };

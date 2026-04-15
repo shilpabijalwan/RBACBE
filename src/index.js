@@ -3,7 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { authenticate, sequelize } = require("./config/db");
 const adminRouter = require("./routes/adminRoute");
-const permissionRouter = require("./routes/permissionRoute");
+
 
 const app = express();
 const PORT = process.env.PORT || 7000;

@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
-const permissionModal = sequelize.define("permission", {
-    id: {
+const permission = sequelize.define("permission", {
+  id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
@@ -20,14 +20,9 @@ const permissionModal = sequelize.define("permission", {
     allowNull: true,
     unique: true,
   },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  module:{
+  module: {
     type: DataTypes.STRING,
     allowNull: true,
-
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -41,4 +36,4 @@ const permissionModal = sequelize.define("permission", {
   },
 });
 
-module.exports = permissionModal;
+module.exports = permission;
