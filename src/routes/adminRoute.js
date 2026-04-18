@@ -5,16 +5,15 @@ const {
   getUsers,
   loginUser,
   logoutUser,
-  // createUserRole,
-  // createPermission,
 } = require("../controller/adminController");
 const { requireAuth } = require("../middleware/requireAuth");
 const { createPermission } = require("../controller/permissionController");
+const { createRole } = require("../controller/roleController");
 
-adminRouter.post("/create-user", createUser);
-adminRouter.get("/get-users", getUsers);
-adminRouter.post("/login", loginUser);
-adminRouter.post("/logout", logoutUser);
-// adminRouter.post("/create-role", createUserRole);
-adminRouter.post("/create-permission", createPermission);
+adminRouter.post("/create-user", requireAuth, createUser);
+adminRouter.get("/get-users", requireAuth, getUsers);
+adminRouter.post("/login", requireAuth, loginUser);
+adminRouter.post("/logout", requireAuth, logoutUser);
+adminRouter.post("/create-permission", requireAuth, createPermission);
+adminRouter.post("/create-role", requireAuth, createRole);
 module.exports = adminRouter;

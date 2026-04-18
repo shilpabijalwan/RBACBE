@@ -1,14 +1,15 @@
 const permissionServices = require("../services/permissionServices");
 
-const createPermission = async (req, res) => {
-  try {
-    const result = await permissionServices(req, res);
 
-    res.status(result.status).json(result);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
-  }
+
+
+const createPermission = async (req, res) => {
+  const result = await permissionServices({
+    currentUser: req.auth,
+    body: req.body,
+    db: req.db,
+  });
+
+  return res.status(result.status).json(result);
 };
 module.exports = { createPermission };
