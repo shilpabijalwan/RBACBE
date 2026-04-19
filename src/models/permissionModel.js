@@ -17,12 +17,11 @@ const permission = sequelize.define("permission", {
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: true,
-    unique: true,
+    allowNull: false,
   },
   module: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   createdAt: {
     type: DataTypes.DATE,
