@@ -3,9 +3,6 @@ const user = require("../models/userModel");
 
 const permissionServices = async ({ currentUser = {}, body = {}, db = {} }) => {
   const { name, module } = body;
-
-  console.log("Received data in permissionServices:", { name, module });
-
   try {
     if (!Array.isArray(name)) {
       return {
@@ -18,7 +15,15 @@ const permissionServices = async ({ currentUser = {}, body = {}, db = {} }) => {
     const mapedData = name.map((ele, ind) => {
       return { name: ele, module: module };
     });
-
+    const PermissionExist = await permission.findAll({
+      where: { name: name },
+    });
+    if (PermissionExist.length > 0) {
+      return {
+        status: 409,
+        message: "Permission already exists. Please choose a different name",
+      };
+    }
     const permissionData = await permission.bulkCreate(mapedData);
     return {
       status: 201,
